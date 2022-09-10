@@ -32,7 +32,8 @@ class Player:
     return status, log
 
   def createGameStatus(self, statusStr):
-    self.gameStatus. _ = 
+    self.gameStatus, _ = parseStatus(statusStr)
+    
     
 
 class NameDB:
