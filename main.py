@@ -26,4 +26,7 @@ async def on_message(message):
         response = "汪!【{}】 掷骰 1D{}={}".format(message.author.nick, dice.max, dice.rowDice())
         await message.channel.send(response)
 
+    if message.content.startswith(".st "):
+      await message.channel.send("收到")
+
 client.run(os.getenv('TOKEN'))

@@ -1,45 +1,55 @@
-
+import discord
 
 class Player:
-  def __init__(self, userID, name, gameName):
-    self.id = userID
-    self.name = name
-    self.gameName = gameName
-    self.gameStatus = {}
+  def __init__(self, playerName):
+    self.playerName = playerName
+    self.playerStatus = {}
 
-  def updateName(self, name):
-    self.name = name
+  def updateGameName(self, playerName):
+    self.playerName = playerName
 
-  def updateGameName(self, gameName):
-    self.gameName = gameName
-
-  def parseStatus(statusStr):
+  def parseStatus(self, playerStatus):
     status = {}
-    log = ""
-    while (len(statusStr)):
+    while (len(playerStatus)):
       # 获取名称
       typeIdx = 0
-      while not statusStr[typeIdx].isdigit():
+      while not playerStatus[typeIdx].isdigit():
         typeIdx += 1
       # 获取数字
       valueIdx = typeIdx
-      while statusStr[valueIdx].isdigit():
+      while playerStatus[valueIdx].isdigit():
         valueIdx += 1
       # 录入
       # TODO: Exception 需要检查录入合法性
       # TODO: 检查是否已经存在
-      status[statusStr[0:typeIdx]] = statusStr[typeIdx:valueIdx]
-    return status, log
+      status[playerStatus[0:typeIdx]] = playerStatus[typeIdx:valueIdx]
+      # 删除已录入的部分
+      playerStatus = playerStatus[valueIdx:]
+    return status
 
   def createGameStatus(self, statusStr):
-    self.gameStatus, _ = parseStatus(statusStr)
-    
-    
+    self.playerStatus = self.parseStatus(statusStr)
 
-class NameDB:
+
+USER = "USER"
+PLAYER = "PLAYER"
+KP = "KP"
+
+class Member:
+  def __init__(self, type, discordMsg):
+    self.type = type
+    self.player = None
+    if type == PLAYER:
+      self.player = Player(discordMsg.author.nick)
+
+
+
+class MemberDataBase:
   def __init__(self):
-    return
+    self.memberDB = {}
 
-  # Update the user list / group / 
-  def update(self):
+  def addPlayer(self, discordMsg):
+    userID = discordMsg.author.id
+    self.memberDB[userID] = Member(PLAYER, discordMsg):
+    
     
