@@ -50,6 +50,6 @@ class MemberDataBase:
 
   def addPlayer(self, discordMsg):
     userID = discordMsg.author.id
-    self.memberDB[userID] = Member(PLAYER, discordMsg):
+    self.memberDB[userID] = Member(PLAYER, discordMsg)
     
     
