@@ -25,10 +25,11 @@ class Player:
       status[playerStatus[0:typeIdx]] = playerStatus[typeIdx:valueIdx]
       # 删除已录入的部分
       playerStatus = playerStatus[valueIdx:]
-    return status
+    return status, len(status.keys())
 
   def createGameStatus(self, statusStr):
-    self.playerStatus = self.parseStatus(statusStr)
+    self.playerStatus, amount = self.parseStatus(statusStr[4:])
+    return amount
 
 
 USER = "USER"
@@ -40,7 +41,10 @@ class Member:
     self.type = type
     self.player = None
     if type == PLAYER:
-      self.player = Player(discordMsg.author.nick)
+      self.player = Player(discordMsg.author.nick, discordMsg)
+
+  def createGameStatus(self, statusStr):
+    return self.player.createGameStatus(statusStr)
 
 
 
@@ -48,8 +52,18 @@ class MemberDataBase:
   def __init__(self):
     self.memberDB = {}
 
+  def getMember(self, discordMsg):
+    if discordMsg.author.id in self.memberDB.keys():
+      return self.memberDB[discordMsg.author.id]
+    return None
+
   def addPlayer(self, discordMsg):
     userID = discordMsg.author.id
     self.memberDB[userID] = Member(PLAYER, discordMsg)
+    return self.memberDB[userID].createGameStatus(discordMsg.content)
+
+  def checkStatus(self, discordMsg):
+    if discordMsg.author.id in self.memberDB.keys():
+      return checkStatus(self, discordMsg)
     
     
